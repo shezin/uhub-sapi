@@ -1,0 +1,23 @@
+%dw 2.0
+
+type auto_ff42521e_7d21_4190_8310_a5df09c0a561_Output_Attributes = {|
+  clientCertificate?: {|
+    publicKey?: {|  |}, 
+    "type"?: String, 
+    encoded?: Binary
+  |}, 
+  headers: {|  |}, 
+  listenerPath: String, 
+  method: String, 
+  queryParams: {|  |}, 
+  queryString: String, 
+  relativePath: String, 
+  remoteAddress: String, 
+  requestPath: String, 
+  requestUri: String, 
+  scheme: String, 
+  uriParams: {| "national-id": String |}, 
+  version: String, 
+  localAddress: String
+|}
+

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	
+	
+	<sub-flow name="get-full-record-subflow" doc:id="b8c599ba-d172-4b35-9000-94de64027ea1" >
+		<logger level="INFO" doc:name="Logger" doc:id="181981f8-d8c1-448a-b867-8af9d2f77b2f" message="start-subflow"/>
+		<db:select doc:name="Select" doc:id="00be29e7-40a5-4519-b1a3-a88555667517" config-ref="Uhub_Database_Config">
+			<db:sql ><![CDATA[SELECT * FROM uhub.covid_report]]></db:sql>
+		</db:select>
+		<logger level="INFO" doc:name="Logger" doc:id="7cf8bea2-9f4f-403d-89aa-c13091003cad" message="#[payload]"/>
+	</sub-flow>
+	<sub-flow name="get-reports-nationalId-subflow" doc:id="ff42521e-7d21-4190-8310-a5df09c0a561" >
+		<logger level="INFO" doc:name="Start Log" doc:id="01a92b01-d750-4950-bd2a-6100c0c5d4ae" message="DB flow started"/>
+		<db:select doc:name="Select" doc:id="ffed5e63-8e1e-42db-94ee-6a1e38df0c10" config-ref="Uhub_Database_Config">
+			<db:sql ><![CDATA[select case_id, source, case_type, first_name, last_name, phone, email, date_of_birth, national_id, national_id_type, street_address, city, state, postal, country, create_date, update_date from covid_report where national_id = :national_id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[national_id : vars.nationalID]]]></db:input-parameters>
+		</db:select>
+		<logger level="INFO" doc:name="Logger" doc:id="ab3472fc-3c58-4331-be78-d12369fdb109" />
+	</sub-flow>
+	<sub-flow name="update-covid-case" doc:id="34f7c41c-c426-4724-91fb-ee12c25db590" >
+		<logger level="INFO" doc:name="Start Log" doc:id="80a11340-50f4-4517-bafa-dabfd2e766af" message="Start Log"/>
+		<db:update doc:name="Update" doc:id="838349b2-982e-4093-a29d-411fa7516dad" config-ref="Uhub_Database_Config">
+			<db:sql ><![CDATA[update covid_report set source=:source, case_type=:case_type, first_name=:first_name, last_name=:last_name, phone=:phone, email=:email, date_of_birth=:date_of_birth, national_id=:national_id, national_id_type=:national_id_type, street_address=:street_address, city=:city, state=:state, postal=:postal, country=:country, update_date=:update_date, create_by=:create_by, update_by=:update_by where CASE_ID=:CASE_ID]]></db:sql>
+			<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
+		</db:update>
+		<logger level="INFO" doc:name="End Log" doc:id="8eee21ac-f06b-4db4-9f84-bd7030f9adc5" message="updated"/>
+	</sub-flow>
+	<sub-flow name="insert-covid-case-subflow" doc:id="20ed1054-619e-44ef-9589-8a1e0887361b" >
+		<logger level="INFO" doc:name="startLog" doc:id="924674b0-ff4a-421f-8a07-cf2fc3104834" message="Before inserting to data base transactionId: #[vars.transactionId],correlationId; #[vars.correlationId]"/>
+		<db:insert doc:name="Insert" doc:id="6a832491-07c8-4a55-b76b-ba01cf36c3fd" autoGenerateKeys="true" config-ref="Uhub_Database_Config">
+			<db:sql ><![CDATA[insert into covid_report (source, case_type, first_name, last_name, phone, email, date_of_birth, national_id, national_id_type, street_address, city, state, postal, country, create_date, update_date, create_by, update_by) values(:source, :case_type, :first_name, :last_name, :phone, :email, :date_of_birth, :national_id, :national_id_type, :street_address, :city, :state, :postal, :country,:create_date, :update_date, :create_by, :update_by)]]></db:sql>
+			<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
+			<db:auto-generated-keys-column-names >
+				<db:auto-generated-keys-column-name value="#['CASE_ID']" />
+			</db:auto-generated-keys-column-names>
+		</db:insert>
+		<logger level="INFO" doc:name="Logger" doc:id="27333174-b28c-4df1-9ea3-52f9a0fdb96c" message="end log "/>
+	</sub-flow>
+</mule>

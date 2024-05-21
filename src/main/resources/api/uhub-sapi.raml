@@ -1,0 +1,148 @@
+#%RAML 1.0
+title: uhub-sapi
+baseUri: 
+traits:
+  client-id-header: !include /exchange_modules/664448ae-be35-4926-803a-c28afc32ce7a/client-id-required/1.0.0/client-id-required.raml
+  transcation-header: !include /exchange_modules/664448ae-be35-4926-803a-c28afc32ce7a/transaction-header/1.0.1/transaction-header.raml
+  correlation-id-header: !include /exchange_modules/664448ae-be35-4926-803a-c28afc32ce7a/correlation-id-header/1.0.0/correlation-id-header.raml
+  state-query-param : !include /uhub-sapi-types/state-query-param.raml
+
+uses:
+  common-data-types : /exchange_modules/664448ae-be35-4926-803a-c28afc32ce7a/common-data-types/1.0.1/common-data-types.raml
+  uhub-sapi-types : /uhub-sapi-types/uhub-sapi-types.raml
+/cases:
+  post:
+    description: To register coivd case
+    is: [client-id-header,correlation-id-header,transcation-header]
+    body:
+      application/json:
+        type: uhub-sapi-types.covid-case-request-type
+        example: !include /example/covid-case-request.raml
+          
+    responses:
+      201:
+        body:
+          application/json:
+            type: uhub-sapi-types.covid-case-response-type
+            example: !include /example/covid-case-reponse.raml
+      400:
+        body:
+          application/json:
+            type: common-data-types.errorType
+            example: !include /example/400.raml
+      404:
+        body:
+          application/json:
+            type: common-data-types.errorType
+            example: !include /example/404.raml      
+              
+      500:
+        body:
+          application/json:
+            type: common-data-types.errorType
+            example: !include /example/500.raml
+      503:
+        body:
+          application/json:
+            type: common-data-types.errorType
+            example: !include /example/503.raml
+  put:
+    description: to update covid case
+    is: [client-id-header,correlation-id-header,transcation-header]
+    body:
+      application/json:
+        type: uhub-sapi-types.covid-case-request-type
+        example: !include /example/covid-case-request.raml
+    responses:
+      200:
+        body:
+          application/json:
+            type: uhub-sapi-types.covid-case-response-type
+            example: !include /example/covid-case-reponse.raml
+      400:
+        body:
+          application/json:
+            type: common-data-types.errorType
+            example: !include /example/400.raml
+      404:
+        body:
+          application/json:
+            type: common-data-types.errorType
+            example: !include /example/404.raml      
+              
+      500:
+        body:
+          application/json:
+            type: common-data-types.errorType
+            example: !include /example/500.raml
+      503:
+        body:
+          application/json:
+            type: common-data-types.errorType
+            example: !include /example/503.raml
+  /{national-id}:
+    get:
+      description: get data by national id
+      responses:
+        200:
+          body:
+            application/json:
+              type: uhub-sapi-types.get-cases-by-national-id-response-type
+              example: !include /example/get-cases-by-national-id-response.raml
+        400:
+          body:
+            application/json:
+              type: common-data-types.errorType
+              example: !include /example/400.raml
+        404:
+          body:
+            application/json:
+              type: common-data-types.errorType
+              example: !include /example/404.raml            
+        500:
+          body:
+            application/json:
+              type: common-data-types.errorType
+              example: !include /example/500.raml
+        503:
+          body:
+            application/json:
+              type: common-data-types.errorType
+              example: !include /example/503.raml      
+/reports:
+  get:
+    description: to get covid reports 
+    responses:
+      200:
+        body:
+          application/json:
+            type: uhub-sapi-types.get-reports-response-type
+            example: !include /example/get-response-report.raml
+      400:
+          body:
+            application/json:
+              type: common-data-types.errorType
+              example: !include /example/400.raml
+      404:
+        body:
+          application/json:
+            type: common-data-types.errorType
+            example: !include /example/404.raml            
+      500:
+        body:
+          application/json:
+            type: common-data-types.errorType
+            example: !include /example/500.raml
+      503:
+        body:
+          application/json:
+            type: common-data-types.errorType
+            example: !include /example/503.raml  
+              
+                        
+              
+      
+              
+              
+    
+    

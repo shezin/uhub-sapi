@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="post:\cases:application\json:uhub-sapi-config">
+        <set-variable value='#[attributes.headers."x-correlationId" default ""]' doc:name="CorrelationId" doc:id="cb5ed41e-6a6b-452a-a88a-62ae0d341021" variableName="correlationId"/>
+		<logger level="INFO" doc:name="flowStarted" doc:id="1013a331-553c-409c-88df-b2836920117a" message='correaltionId:#[vars.correlationId],transactionId:#[vars.transactionId]'/>
+		<ee:transform doc:name="Prepare Request Rayload" doc:id="ca075255-8171-44aa-85c0-ba415aebf361" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+var currentDate = now() as String { format: "yyyy-MM-dd" }
+---
+{
+	source: payload.source,
+	case_type: payload.caseType,
+	first_name: payload.firstName,
+	last_name: payload.lastName,
+	phone: payload.phone,
+	email: payload.email,
+	date_of_birth: payload.dateOfBirth as String {
+		format: "yyyy-MM-dd"
+	},
+	national_id: payload.nationalID,
+	national_id_type: payload.nationalIDType,
+	street_address: payload.address.streetAddress,
+	city: payload.address.city,
+	state: upper(payload.address.state),
+	postal: payload.address.postal,
+	country: payload.address.country,
+	create_date: currentDate,
+	update_date: currentDate,
+	create_by: "UHIS",
+	update_by: "UHIS"
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<flow-ref doc:name="insert-covid-case-subflow" doc:id="1b174025-e5cd-4dfb-a692-0018682c6a4f" name="insert-covid-case-subflow" />
+		<ee:transform doc:name="Prepare Response">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  caseID: payload[0].CASE_ID 
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<logger level="INFO" doc:name="End Log" doc:id="98dd95ed-b2db-47d9-8860-cfcdfe7b8f1f" message="#[payload]"/>
+    
+</flow></mule>
