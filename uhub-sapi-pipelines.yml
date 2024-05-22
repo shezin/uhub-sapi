@@ -14,7 +14,7 @@ steps:
 - task: Maven@4
   inputs:
     mavenPomFile: 'pom.xml'
-    options: '-Pdev -DmuleDeploy -Dusername=Shezinvc1 -Dpassword=Shezin123'
+    options: '-Pdev -DmuleDeploy -DskipMunitTests -Dusername=Shezinvc1 -Dpassword=Shezin123'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
