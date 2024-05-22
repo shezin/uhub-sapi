@@ -25,6 +25,7 @@
 		<profile>
 			<id>dev</id>
 			<build>
+				
 				<plugins>
 					<plugin>
 						<groupId>org.mule.tools.maven</groupId>
