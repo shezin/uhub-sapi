@@ -31,7 +31,7 @@ steps:
   inputs:
     mavenPomFile: 'pom.xml'
     goals: 'deploy'
-    options: '-DskipTests -Pdev -DmuleDeploy -Dusername=${username} -Dpassword-${password}'
+    options: '-DskipTests -Pdev -DmuleDeploy -Dusername=${username} -Dpassword-${password} -Dserver=${server}'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
