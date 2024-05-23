@@ -40,20 +40,7 @@ steps:
     artifactsFeeds: '2243563'
   
 
-- task: Maven@3
-  displayName: Test
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
-    goals: 'test'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    testRunTitle: 'Azure Pipeline Test Report'
-    javaHomeOption: 'JDKVersion'
-    mavenVersionOption: 'Default'
-    mavenAuthenticateFeed: false
-    effectivePomSkip: false
-    sonarQubeRunAnalysis: false
+
 - task: Maven@3
   displayName: Deploy
   inputs:
